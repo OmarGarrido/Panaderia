@@ -1,0 +1,100 @@
+<div style="text-align: center">
+    <table class="table table-hover" style="min-height: 57.7vh">
+        <thead>
+            <tr class="table-primary">
+                <th>iD</th>
+                <th>Nombre</th>
+                <th>Telefono</th>
+                <th>Direccion</th>
+                <th>Correo</th>
+                <th>Operaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table" *ngFor="let item of collection.data | paginate: config">
+                <td>{{ item.id }}</td>
+                <td>{{ item.nombre }} {{ item.apellido_p }} {{ item.apellido_m }}</td>
+                <td>{{ item.telefono }}</td>
+                <td>{{ item.direccion }}</td>
+                <td>{{ item.correo }}</td>
+                <td>
+                    <!-- <button type="button" class="btn btn-danger" (click)="eliminar(item)">Eliminar</button> -->
+                    <button type="button" class="btn btn-primary me-3" (click)="editar(content, item)">
+                        Editar
+                    </button>
+                    <button type="button" class="btn btn-success" (click)="verCliente(item)">
+                        Ver
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
+    <!-- Todo esto es el html del Modal (ventana emergente) -->
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">
+                Crear/Actualizar Smartphone
+            </h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <form [formGroup]="clientesForm">
+                        <!-- <div class="form-group">
+                            <strong><label for="">id</label></strong>
+                            <input type="text" formControlName="id" class="form-control" />
+                        </div> -->
+
+                        <div class="form-group">
+                            <strong><label for="">Nombre</label></strong>
+                            <input type="text" formControlName="nombre" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <strong><label for="">Apellido Paterno</label></strong>
+                            <input type="text" formControlName="apellido_p" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <strong><label for="">Apellido Materno</label></strong>
+                            <input type="text" formControlName="apellido_m" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <strong><label for="">Telefono</label></strong>
+                            <input type="text" formControlName="telefono" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <strong><label for="">Direccion</label></strong>
+                            <input type="text" formControlName="direccion" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <strong><label for="">Correo</label></strong>
+                            <input type="email" formControlName="correo" class="form-control" />
+                        </div>
+
+                    </form>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button *ngIf="updSave == false" type="button" class="btn btn-success" (click)="guardar()">
+                Guardar
+            </button>
+            <button *ngIf="updSave == true" type="button" class="btn btn-info" (click)="actualizar()">
+                Actualizar
+            </button>
+        </div>
+    </ng-template>
+
+    <button type="button" class="btn btn-primary" (click)="nuevo(content)">
+        Añadir Nuevo Smartphone
+    </button>
+</div>

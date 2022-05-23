@@ -1,0 +1,139 @@
+<div class="container mt-3">
+    <button class="btn btn-success" (click)="opcion(1)">Agregar Nueva Venta</button>
+    <button class="btn btn-info ms-3" (click)="opcion(2)">Ver Todas Las Ventas</button>
+    <!-- <button class="btn btn-info ms-3" (click)="opcion(1)">Agregar Nueva Venta</button> -->
+    <div class="row align-items-center" *ngIf="opt==1">
+        <div class=" row align-items-center">
+            <div class=" col-md-2">
+                <div class="card text-white bg-info">
+                    <div class="card-header"><strong>Cliente</strong> </div>
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item"><strong>Nombre</strong> <br>{{cliente.nombre}}
+                            {{cliente.apellido_p}}
+                            {{cliente.apellido_m}}</li>
+                        <li class="list-group-item"><strong>Direccion</strong> <br> {{cliente.direccion}}</li>
+                        <li class="list-group-item"><strong>Telefono</strong> <br> {{cliente.telefono}}</li>
+                        <li class="list-group-item"><strong>Correo</strong> <br> {{cliente.correo}}</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="col" style="text-align: center">
+                <div class="row">
+                    <div class="col">
+                        <h2 class="mb-3">Productos agregados</h2>
+                    </div>
+                    <div class="col" style="text-align: end;">
+                        <button *ngIf="totalNeto" class="btn btn-success btn-lg" (click)="guardar()">Guardar
+                            Compra</button>
+                    </div>
+                </div>
+                <table class="table table-hover" style="min-height: 30vh">
+                    <thead>
+                        <tr class="table-success">
+                            <th>Producto</th>
+                            <th>Cantidad</th>
+                            <th>Precio</th>
+                            <th>Total</th>
+                            <!-- <th>Operaciones</th> -->
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table" *ngFor="let item of ventas.productos | paginate: config">
+                            <td>{{ item.producto.nombre }}</td>
+                            <td>{{ item.cantidad }}</td>
+                            <td>{{ item.producto.precio }}</td>
+                            <td>{{ item.total }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+                <div style="text-align: end;">
+                    <h5><strong>Total de compra:</strong> ${{totalNeto}}</h5>
+                    <!-- <button class="btn btn-success">Guardar</button> -->
+                </div>
+            </div>
+            <!-- <div class="col">1</div> -->
+        </div>
+
+        <div class="row mt-5">
+            <hr>
+            <h3>Productos</h3>
+            <div style="text-align: center">
+                <table class="table table-hover" style="min-height: 25.7vh">
+                    <thead>
+                        <tr class="table-info">
+                            <!-- <th>ID</th> -->
+                            <th>Producto</th>
+                            <th>Tipo</th>
+                            <th>Precio</th>
+                            <th>Operaciones</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="table" *ngFor="let item of collection.data | paginate: config">
+                            <!-- <td>{{ item.id }}</td> -->
+                            <td>{{ item.nombre }}</td>
+                            <td>{{ item.tipo }}</td>
+                            <td>{{ item.precio }}</td>
+                            <td>
+                                <!-- <button type="button" class="btn btn-danger" (click)="eliminar(item)">Eliminar</button> -->
+                                <button type="button" class="btn btn-primary" (click)="Agregar(item)">
+                                    Agregar
+                                </button>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-3" *ngIf="opt==2">
+        <h3>Todas las ventas</h3>
+        <div style="text-align: center">
+            <table class="table table-hover" style="min-height: 25.7vh">
+                <thead>
+                    <tr class="table-info">
+                        <th>Fecha</th>
+                        <th>Producto</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
+                        <th>Total</th>
+                        <th class="align middle">
+                            Total Neto
+                            <button class="btn btn-primary" (click)="ordenar()">p</button>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="table" *ngFor="let item of ventasCliente | paginate: config">
+                        <td class="align-middle">{{ item.fecha.seconds*1000 | date }}</td>
+                        <td>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" *ngFor="let i of item.productos">{{i.producto.nombre}}s</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" *ngFor="let i of item.productos">{{i.cantidad}} pzs</li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" *ngFor="let i of item.productos">${{i.producto.precio}}
+                                </li>
+                            </ul>
+                        </td>
+                        <td>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item" *ngFor="let i of item.productos">${{i.total | number}}</li>
+                            </ul>
+                        </td>
+                        <td class="align-middle">${{ item.totalNeto | number }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+        </div>
+    </div>

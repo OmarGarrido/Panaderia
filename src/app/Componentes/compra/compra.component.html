@@ -1,0 +1,77 @@
+<div style="text-align: center">
+    <table class="table table-hover" style="min-height: 57.7vh">
+        <thead>
+            <tr class="table-primary">
+                <th>iD</th>
+                <th>Nombre de producto</th>
+                <th>Tipo</th>
+                <th>Precio</th>
+                <th>Operaciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="table" *ngFor="let item of collection.data | paginate: config">
+                <td>{{ item.id }}</td>
+                <td>{{ item.nombre }}</td>
+                <td>{{ item.tipo }}</td>
+                <td>{{ item.precio }}</td>
+                <td>
+                    <!-- <button type="button" class="btn btn-danger" (click)="eliminar(item)">Eliminar</button> -->
+                    <button type="button" class="btn btn-primary" (click)="editar(content, item)">
+                        Editar
+                    </button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+    <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
+
+    <!-- Todo esto es el html del Modal (ventana emergente) -->
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">
+                Crear/Actualizar Smartphone
+            </h4>
+            <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
+                <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form>
+                <div class="form-group">
+                    <form [formGroup]="productosForm">
+                        <div class="form-group">
+                            <strong><label for="">Nombre de producto</label></strong>
+                            <input type="text" formControlName="nombre" class="form-control" />
+                        </div>
+
+                        <div class="form-group">
+                            <strong><label for="">Tipo</label></strong>
+                            <select class="form-select" formControlName="tipo">
+                                <option *ngFor="let op of options" [ngValue]="op">{{op}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <strong><label for="">Precio</label></strong>
+                            <input type="number" formControlName="precio" class="form-control" />
+                        </div>
+
+                    </form>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button *ngIf="updSave == false" type="button" class="btn btn-success" (click)="guardar()">
+                Guardar
+            </button>
+            <button *ngIf="updSave == true" type="button" class="btn btn-info" (click)="actualizar()">
+                Actualizar
+            </button>
+        </div>
+    </ng-template>
+
+    <button type="button" class="btn btn-primary" (click)="nuevo(content)">
+        Añadir Nuevo Smartphone
+    </button>
+</div>
