@@ -1,16 +1,86 @@
-import { Component, OnInit } from '@angular/core';
+import {
+  Component,
+  Directive,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChildren,
+} from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Cliente } from 'src/app/models';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
+/************************************ */
+export type SortColumn = keyof Cliente | '';
+export type SortDirection = 'asc' | 'desc' | '';
+const rotate: { [key: string]: SortDirection } = {
+  asc: 'desc',
+  desc: '',
+  '': 'asc',
+};
 
+const compare = (v1: string | number, v2: string | number) =>
+  v1 < v2 ? -1 : v1 > v2 ? 1 : 0;
+
+export interface SortEvent {
+  column: SortColumn;
+  direction: SortDirection;
+}
+
+@Directive({
+  selector: 'th[sortable]',
+  host: {
+    '[class.asc]': 'direction === "asc"',
+    '[class.desc]': 'direction === "desc"',
+    '(click)': 'rotate()',
+  },
+})
+export class NgbdSortableHeader {
+  @Input() sortable: SortColumn = '';
+  @Input() direction: SortDirection = '';
+  @Output() sort = new EventEmitter<SortEvent>();
+
+  rotate() {
+    this.direction = rotate[this.direction];
+    this.sort.emit({ column: this.sortable, direction: this.direction });
+  }
+}
+
+/************************************ */
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
   styleUrls: ['./clientes.component.css'],
 })
 export class ClientesComponent implements OnInit {
+  /**************************************************** */
+  @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
+
+  onSort({ column, direction }: SortEvent) {
+    // resetting other headers
+    this.headers.forEach((header) => {
+      if (header.sortable !== column) {
+        header.direction = '';
+      }
+    });
+
+    // sorting countries
+    if (direction === '' || column === '') {
+      this.collection.data = this.constCollection;
+    } else {
+      this.collection.data = [...this.constCollection].sort((a, b) => {
+        const res = compare(a[column], b[column]);
+        return direction === 'asc' ? res : -res;
+      });
+    }
+  }
+  /**************************************************** */
+
   collection = { data: [] };
+  constCollection: any;
   clientesForm: FormGroup;
   idFirebaseUpdate: string;
   path = 'Clientes';
@@ -53,10 +123,12 @@ export class ClientesComponent implements OnInit {
             direccion: e.payload.doc.data().direccion,
             telefono: e.payload.doc.data().telefono,
             correo: e.payload.doc.data().correo,
-            id_cliente: e.payload.doc.id,
+            id_cliente: e.payload.doc.data().id_cliente,
           };
         });
-        console.log(this.collection.data);
+        const v = this.collection.data;
+        this.constCollection = v;
+        // console.log(this.collection.data);
       },
       (error) => {
         console.log(error);
@@ -79,6 +151,9 @@ export class ClientesComponent implements OnInit {
       .then((resp) => {
         this.clientesForm.reset();
         this.modalService.dismissAll();
+        this.fibaseService.actualizarRegistro(this.path, resp.id, {
+          id_venta: resp.id,
+        });
       })
       .catch((error) => {
         console.error(error);
@@ -116,7 +191,7 @@ export class ClientesComponent implements OnInit {
       direccion: item.direccion,
       correo: item.correo,
     });
-    this.idFirebaseUpdate = item.id;
+    this.idFirebaseUpdate = item.id_cliente;
     console.log(this.idFirebaseUpdate);
     //**//
     this.modalService
@@ -133,6 +208,7 @@ export class ClientesComponent implements OnInit {
 
   nuevo(content) {
     this.updSave = false;
+    this.clientesForm.reset();
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
       .result.then(

@@ -20,9 +20,9 @@ export interface Provedor {
 export interface Producto {
   id_producto: string;
   nombre: string;
-  descripcion: string;
   tipo: string;
   precio: number;
+  provedor:Provedor
 }
 
 export interface ProductoPedido {

@@ -5,7 +5,10 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { ProvedorComponent } from './Componentes/provedor/provedor.component';
 import { ProductoComponent } from './Componentes/producto/producto.component';
-import { VentaComponent } from './Componentes/venta/venta.component';
+import {
+  NgbdSortableHeader,
+  VentaComponent,
+} from './Componentes/venta/venta.component';
 import { ClientesComponent } from './Componentes/clientes/clientes.component';
 import { CompraComponent } from './Componentes/compra/compra.component';
 import { NavbarComponent } from './Componentes/navbar/navbar.component';
@@ -15,6 +18,10 @@ import { environment } from 'src/environments/environment';
 
 import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SortDirective } from './Directives/sort.directive';
+import { VentasTotalesComponent } from './Componentes/ventas-totales/ventas-totales.component';
+import { GraphComponent } from './shared/widgets/graph/graph.component';
+import { HighchartsChartModule } from 'highcharts-angular';
 
 @NgModule({
   declarations: [
@@ -25,6 +32,10 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     ClientesComponent,
     CompraComponent,
     NavbarComponent,
+    SortDirective,
+    NgbdSortableHeader,
+    VentasTotalesComponent,
+    GraphComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -34,6 +45,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
     NgxPaginationModule,
     FormsModule,
     ReactiveFormsModule,
+    HighchartsChartModule,
   ],
   providers: [],
   bootstrap: [AppComponent],

@@ -41,6 +41,10 @@ export class FirebaseService {
   getCollection(path: string) {
     return this.firestore.collection(path).snapshotChanges();
   }
+  
+  getCollectionType<tipo>(path: string) {
+    return this.firestore.collection<tipo>(path).valueChanges();
+  }
 
   getCollectionWhere<tipo>(path, param, buscar) {
     return this.firestore

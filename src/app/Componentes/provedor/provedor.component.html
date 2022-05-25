@@ -2,16 +2,16 @@
     <table class="table table-hover" style="min-height: 57.7vh">
         <thead>
             <tr class="table-primary">
-                <th>iD</th>
-                <th>Nombre</th>
-                <th>Telefono</th>
-                <th>Correo</th>
+                <th>ID Provedor</th>
+                <th sortable="nombre" (sort)="onSort($event)">Nombre</th>
+                <th sortable="telefono" (sort)="onSort($event)">Telefono</th>
+                <th sortable="correo" (sort)="onSort($event)">Correo</th>
                 <th>Operaciones</th>
             </tr>
         </thead>
         <tbody>
             <tr class="table" *ngFor="let item of collection.data | paginate: config">
-                <td>{{ item.id }}</td>
+                <td>{{ item.id_provedor }}</td>
                 <td>{{ item.nombre }} {{ item.apellido_p }} {{ item.apellido_m }}</td>
                 <td>{{ item.telefono }}</td>
                 <td>{{ item.correo }}</td>
@@ -30,7 +30,7 @@
     <ng-template #content let-modal>
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">
-                Crear/Actualizar Smartphone
+                Crear/Actualizar Provedor
             </h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
@@ -80,6 +80,6 @@
     </ng-template>
 
     <button type="button" class="btn btn-primary" (click)="nuevo(content)">
-        Añadir Nuevo Smartphone
+        Añadir Nuevo Provedor
     </button>
 </div>

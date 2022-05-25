@@ -2,16 +2,16 @@
     <table class="table table-hover" style="min-height: 57.7vh">
         <thead>
             <tr class="table-primary">
-                <th>iD</th>
-                <th>Nombre de producto</th>
-                <th>Tipo</th>
-                <th>Precio</th>
+                <th>ID Provedor</th>
+                <th sortable="nombre" (sort)="onSort($event)">Nombre de producto</th>
+                <th sortable="tipo" (sort)="onSort($event)">Tipo</th>
+                <th sortable="precio" (sort)="onSort($event)">Precio</th>
                 <th>Operaciones</th>
             </tr>
         </thead>
         <tbody>
             <tr class="table" *ngFor="let item of collection.data | paginate: config">
-                <td>{{ item.id }}</td>
+                <td>{{ item.id_provedor }}</td>
                 <td>{{ item.nombre }}</td>
                 <td>{{ item.tipo }}</td>
                 <td>{{ item.precio }}</td>
@@ -30,7 +30,7 @@
     <ng-template #content let-modal>
         <div class="modal-header">
             <h4 class="modal-title" id="modal-basic-title">
-                Crear/Actualizar Smartphone
+                Crear/Actualizar Producto
             </h4>
             <button type="button" class="close" aria-label="Close" (click)="modal.dismiss('Cross click')">
                 <span aria-hidden="true">&times;</span>
@@ -49,6 +49,16 @@
                             <strong><label for="">Tipo</label></strong>
                             <select class="form-select" formControlName="tipo">
                                 <option *ngFor="let op of options" [ngValue]="op">{{op}}</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <strong><label for="">Provedor</label></strong>
+                            <select class="form-select" formControlName="id_provedor">
+                                <option value="">Selecciona provedor</option>
+                                <option *ngFor="let provedor of provedores" [ngValue]="provedor.id_provedor">
+                                    {{provedor.nombre}} {{provedor.apellido_p}} {{provedor.apellido_m}}
+                                </option>
                             </select>
                         </div>
 
@@ -72,6 +82,6 @@
     </ng-template>
 
     <button type="button" class="btn btn-primary" (click)="nuevo(content)">
-        Añadir Nuevo Smartphone
+        Añadir Nuevo Producto
     </button>
 </div>

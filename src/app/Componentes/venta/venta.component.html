@@ -20,7 +20,7 @@
             <div class="col" style="text-align: center">
                 <div class="row">
                     <div class="col">
-                        <h2 class="mb-3">Productos agregados</h2>
+                        <h2 class="mb-3 mt-3">Productos agregados</h2>
                     </div>
                     <div class="col" style="text-align: end;">
                         <button *ngIf="totalNeto" class="btn btn-success btn-lg" (click)="guardar()">Guardar
@@ -48,7 +48,7 @@
                 </table>
                 <pagination-controls (pageChange)="pageChanged($event)"></pagination-controls>
                 <div style="text-align: end;">
-                    <h5><strong>Total de compra:</strong> ${{totalNeto}}</h5>
+                    <h5><strong>Total de compra:</strong> ${{totalNeto|number}}</h5>
                     <!-- <button class="btn btn-success">Guardar</button> -->
                 </div>
             </div>
@@ -59,27 +59,27 @@
             <hr>
             <h3>Productos</h3>
             <div style="text-align: center">
-                <table class="table table-hover" style="min-height: 25.7vh">
+                <table class="table table-hover table-striped" style="min-height: 25.7vh">
                     <thead>
                         <tr class="table-info">
                             <!-- <th>ID</th> -->
-                            <th>Producto</th>
-                            <th>Tipo</th>
-                            <th>Precio</th>
+                            <th scope="col" (clik)="ordenar('nombre')"> Producto</th>
+                            <th sortable="tipo" (sort)="onSort($event)">Tipo</th>
+                            <th scope="col" [appSort]="collection.data" data-order="asc" data-name="precio"
+                                (sort)="onSort($event)">Precio</th>
                             <th>Operaciones</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="table" *ngFor="let item of collection.data | paginate: config">
+                        <tr class="table" *ngFor="let item of collection.data">
                             <!-- <td>{{ item.id }}</td> -->
                             <td>{{ item.nombre }}</td>
                             <td>{{ item.tipo }}</td>
                             <td>{{ item.precio }}</td>
-                            <td>
-                                <!-- <button type="button" class="btn btn-danger" (click)="eliminar(item)">Eliminar</button> -->
-                                <button type="button" class="btn btn-primary" (click)="Agregar(item)">
-                                    Agregar
-                                </button>
+                            <td class="align-middle">
+                                <button type="button" class="btn btn-primary" (click)="Agregar(item)"> Agregar </button>
+                                <button type="button" class="btn btn-danger ms-3"
+                                    (click)="Eliminar(item)">Eliminar</button>
                             </td>
                         </tr>
                     </tbody>
@@ -90,19 +90,19 @@
     </div>
 
     <div class="row mt-3" *ngIf="opt==2">
-        <h3>Todas las ventas</h3>
+        <h3>Todas las ventas de {{cliente.nombre}} {{cliente.apellido_p}} </h3>
         <div style="text-align: center">
             <table class="table table-hover" style="min-height: 25.7vh">
                 <thead>
                     <tr class="table-info">
-                        <th>Fecha</th>
-                        <th>Producto</th>
-                        <th>Cantidad</th>
+                        <th sortable="fecha" (sort)="onSort($event)">Fecha</th>
+                        <th [appSort]="ventasCliente" data-order="desc" data-name="nombre">Producto</th>
+                        <th [appSort]="ventasCliente" data-order="desc" data-name="cantidad">Cantidad</th>
                         <th>Precio</th>
                         <th>Total</th>
-                        <th class="align middle">
+                        <th sortable="totalNeto" (sort)="onSort($event)" class="align middle">
                             Total Neto
-                            <button class="btn btn-primary" (click)="ordenar()">p</button>
+                            <!-- <button class="btn btn-primary" (click)="ordenar()">p</button> -->
                         </th>
                     </tr>
                 </thead>

@@ -1,4 +1,3 @@
-import { DecimalPipe } from '@angular/common';
 import {
   Component,
   Directive,
@@ -10,20 +9,16 @@ import {
   QueryList,
   ViewChildren,
 } from '@angular/core';
-import { FormControl } from '@angular/forms';
-import { Router } from '@angular/router';
-import { Observable } from 'rxjs';
 import { Producto, ProductoPedido, Venta } from 'src/app/models';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
-import { map, startWith } from 'rxjs/operators';
 
 interface showVenta {
-  fecha: Date;
-  producto: string;
-  cantidad: number;
-  precio: number;
-  total: number;
-  totalNeto: number;
+  // fecha: Date;
+  nombre: string;
+  tipo: string;
+  precio: string;
+  // total: number;
+  // totalNeto: number;
 }
 
 export type SortColumn = keyof showVenta | '';
@@ -60,66 +55,25 @@ export class NgbdSortableHeader {
     this.sort.emit({ column: this.sortable, direction: this.direction });
   }
 }
-
+/**************** */
 @Component({
   selector: 'app-venta',
   templateUrl: './venta.component.html',
   styleUrls: ['./venta.component.css'],
 })
 export class VentaComponent implements OnInit {
-  @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
-  private _ventas;
-  public get ventas() {
-    return this._ventas;
-  }
-  public set ventas(value) {
-    this._ventas = value;
-  }
-
-  onSort({ column, direction }: SortEvent) {
-    // resetting other headers
-    this.headers.forEach((header) => {
-      if (header.sortable !== column) {
-        header.direction = '';
-      }
-    });
-
-    // sorting countries
-    if (direction === '' || column === '') {
-      this.ventas = ;
-    } else {
-      this.countries = [...COUNTRIES].sort((a, b) => {
-        const res = compare(a[column], b[column]);
-        return direction === 'asc' ? res : -res;
-      });
-    }
-  }
-
   cliente: any = {};
   ventas: Venta;
   collection = { data: [] };
-  private _ventasCliente: Venta[];
-  public get ventasCliente(): Venta[] {
-    return this._ventasCliente;
-  }
-  public set ventasCliente(value: Venta[]) {
-    this._ventasCliente = value;
-  }
+  ventasCliente: Venta[];
+  dataaa;
+
   path = 'Productos';
   config: any;
   totalNeto = 0;
   opt = 2;
 
-  constructor(
-    private fibaseService: FirebaseService,
-    private router: Router,
-    private pipe: DecimalPipe
-  ) {
-    this.countries$ = this.filter.valueChanges.pipe(
-      startWith(''),
-      map((text) => search(text, pipe))
-    );
-  }
+  constructor(private fibaseService: FirebaseService) {}
   ngOnInit(): void {
     this.config = {
       itemsPerPage: 5,
@@ -149,6 +103,7 @@ export class VentaComponent implements OnInit {
             id_producto: e.payload.doc.id,
           };
         });
+        // this.dataaa = this.collection.data;
         // console.log('Productos ->', this.collection.data);
       },
       (error) => {
@@ -166,6 +121,7 @@ export class VentaComponent implements OnInit {
       .subscribe(
         (resp) => {
           this.ventasCliente = resp;
+          this.dataaa = resp;
           // console.log(resp);
           // console.log('Productos ->', this.ventasCliente);
         },
@@ -174,11 +130,34 @@ export class VentaComponent implements OnInit {
         }
       );
   }
+  /**************************** */
 
-  ordenar() {
-    console.log(this.ventasCliente);
+  @ViewChildren(NgbdSortableHeader) headers: QueryList<NgbdSortableHeader>;
 
-    this.ventasCliente.sort();
+  onSort({ column, direction }: SortEvent) {
+    // resetting other headers
+    this.headers.forEach((header) => {
+      if (header.sortable !== column) {
+        header.direction = '';
+      }
+    });
+
+    // sorting countries
+    if (direction === '' || column === '') {
+      this.ventasCliente = this.dataaa;
+    } else {
+      this.ventasCliente = [...this.dataaa].sort((a, b) => {
+        const res = compare(a[column], b[column]);
+        return direction === 'asc' ? res : -res;
+      });
+    }
+  }
+  /**************************** */
+  key = '';
+  reverse = false;
+  ordenar(key) {
+    this.key = key;
+    this.reverse = !this.reverse;
   }
 
   pageChanged(event) {
@@ -204,6 +183,9 @@ export class VentaComponent implements OnInit {
         this.fibaseService.actualizarRegistro('Ventas', docRef.id, {
           id_venta: docRef.id,
         });
+        this.ventas.productos = [];
+        this.total(this.ventas);
+        this.opt = 2;
         // console.log(docRef.id);
       })
       .catch((error) => {
@@ -231,7 +213,26 @@ export class VentaComponent implements OnInit {
       this.ventas.productos.push(pedido);
     }
     // console.log(this.ventas);
-    // this.total(this.ventas);
+    this.total(this.ventas);
+  }
+
+  Eliminar(producto: Producto) {
+    let posicion = 0;
+    const item = this.ventas.productos.find((productosPedido, index) => {
+      posicion = index;
+      return productosPedido.producto.id_producto === producto.id_producto;
+    });
+
+    if (item) {
+      item.cantidad--;
+      if (item.cantidad == 0) {
+        this.ventas.productos.splice(posicion, 1);
+      }
+    }
+    // const path = 'Usuarios/' + this.uid + '/' + this.path;
+    // this.fireBase.crearDoc(path, this.pedido, this.uid).then(() => {
+    //   console.log('eliminado con exito');
+    // });
   }
 
   total(item: Venta) {
