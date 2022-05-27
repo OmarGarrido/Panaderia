@@ -225,10 +225,12 @@ export class VentaComponent implements OnInit {
 
     if (item) {
       item.cantidad--;
+      item.total = producto.precio * item.cantidad;
       if (item.cantidad == 0) {
         this.ventas.productos.splice(posicion, 1);
       }
     }
+    this.total(this.ventas);
     // const path = 'Usuarios/' + this.uid + '/' + this.path;
     // this.fireBase.crearDoc(path, this.pedido, this.uid).then(() => {
     //   console.log('eliminado con exito');

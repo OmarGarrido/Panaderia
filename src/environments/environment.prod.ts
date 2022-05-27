@@ -1,11 +1,11 @@
 export const environment = {
   production: false,
   firebaseConfig:  {
-    apiKey: "AIzaSyBGpYyGrrTK9pVf6fBJbmdGrgWgYu8SS6o",
-    authDomain: "claudia-32bd6.firebaseapp.com",
-    projectId: "claudia-32bd6",
-    storageBucket: "claudia-32bd6.appspot.com",
-    messagingSenderId: "362590677011",
-    appId: "1:362590677011:web:1fafefb355d9ab357f77e6"
+    apiKey: "AIzaSyBwFP_n5cj4b76PXZTZ8o98jbSadOY7SaI",
+    authDomain: "panaderia-e5dff.firebaseapp.com",
+    projectId: "panaderia-e5dff",
+    storageBucket: "panaderia-e5dff.appspot.com",
+    messagingSenderId: "1061777468874",
+    appId: "1:1061777468874:web:355ce7327f0a9d81cfb333"
   }
 };

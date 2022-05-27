@@ -10,7 +10,6 @@ import {
 } from '@angular/core';
 import { Producto, Venta } from 'src/app/models';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
-import * as Highcharts from 'highcharts';
 
 // export interface ShowVentas{
 
@@ -67,7 +66,6 @@ export class VentasTotalesComponent implements OnInit {
   maxPerPage: number;
   constVentas: any;
 
-  Highcharts = Highcharts;
   chartOptions = {};
   listProducto = [];
   productos: any;
@@ -99,65 +97,22 @@ export class VentasTotalesComponent implements OnInit {
       // console.log(this.constVentas);
 
       /****************************** */
-      res.forEach((e) => {
-        e.productos.forEach((p) => {
-          this.listProducto.forEach((prod, i) => {
-            if (p.producto.nombre == prod.name) {
-              this.listProducto[i].y++;
-              // console.log(this.listProducto[i]);
+      // res.forEach((e) => {
+      //   e.productos.forEach((p) => {
+      //     this.listProducto.forEach((prod, i) => {
+      //       if (p.producto.nombre == prod.name) {
+      //         this.listProducto[i].y++;
+      //         // console.log(this.listProducto[i]);
 
-              // prod.ventas=prod.ventas++;
-            }
-          });
-        });
-      });
-      console.log(this.listProducto);
+      //         // prod.ventas=prod.ventas++;
+      //       }
+      //     });
+      //   });
+      // });
+      // console.log(this.listProducto);
 
       /****************************** */
     });
-
-    /***************************** */
-    this.chartOptions = {
-      chart: {
-        plotBackgroundColor: null,
-        plotBorderWidth: null,
-        plotShadow: false,
-        type: 'pie',
-      },
-      title: {
-        text: 'Browser market shares in January, 2018',
-      },
-      tooltip: {
-        pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
-      },
-      accessibility: {
-        point: {
-          valueSuffix: '%',
-        },
-      },
-      plotOptions: {
-        pie: {
-          allowPointSelect: true,
-          cursor: 'pointer',
-          dataLabels: {
-            enabled: false,
-          },
-          showInLegend: true,
-        },
-      },
-      series: [
-        {
-          name: 'Brands',
-          colorByPoint: true,
-          data: this.listProducto,
-        },
-      ],
-    };
-    setTimeout(() => {
-      window.dispatchEvent(new Event('resize'));
-    }, 10);
-
-    /***************************** */
   }
 
   pageChanged(event) {

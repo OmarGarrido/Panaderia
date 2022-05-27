@@ -152,7 +152,7 @@ export class ClientesComponent implements OnInit {
         this.clientesForm.reset();
         this.modalService.dismissAll();
         this.fibaseService.actualizarRegistro(this.path, resp.id, {
-          id_venta: resp.id,
+          id_cliente: resp.id,
         });
       })
       .catch((error) => {

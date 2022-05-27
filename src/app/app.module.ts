@@ -20,8 +20,6 @@ import { NgxPaginationModule } from 'ngx-pagination';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SortDirective } from './Directives/sort.directive';
 import { VentasTotalesComponent } from './Componentes/ventas-totales/ventas-totales.component';
-import { GraphComponent } from './shared/widgets/graph/graph.component';
-import { HighchartsChartModule } from 'highcharts-angular';
 
 @NgModule({
   declarations: [
@@ -35,7 +33,6 @@ import { HighchartsChartModule } from 'highcharts-angular';
     SortDirective,
     NgbdSortableHeader,
     VentasTotalesComponent,
-    GraphComponent,
   ],
   imports: [
     AngularFireModule.initializeApp(environment.firebaseConfig),
@@ -45,7 +42,6 @@ import { HighchartsChartModule } from 'highcharts-angular';
     NgxPaginationModule,
     FormsModule,
     ReactiveFormsModule,
-    HighchartsChartModule,
   ],
   providers: [],
   bootstrap: [AppComponent],
