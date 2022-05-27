@@ -11,7 +11,7 @@ import {
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { ModalDismissReasons, NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { Cliente } from 'src/app/models';
+import { Cliente, Venta } from 'src/app/models';
 import { FirebaseService } from 'src/app/Servicios/firebase.service';
 /************************************ */
 export type SortColumn = keyof Cliente | '';
@@ -87,6 +87,7 @@ export class ClientesComponent implements OnInit {
   closeResult = '';
   config: any;
   updSave: boolean;
+  ventas: any;
 
   constructor(
     public fb: FormBuilder,
@@ -170,8 +171,34 @@ export class ClientesComponent implements OnInit {
           this.clientesForm.value
         )
         .then((resp) => {
-          this.clientesForm.reset();
-          this.modalService.dismissAll();
+          this.fibaseService
+            .getCollectionWhere<Venta>(
+              'Ventas',
+              'id_cliente',
+              this.idFirebaseUpdate
+            )
+            .subscribe((v) => {
+              this.ventas = v;
+              this.ventas.forEach((item) => {
+                item.cliente = this.clientesForm.value;
+                // console.log(item.id_cliente);
+
+                if (this.clientesForm.value.nombre != null) {
+                  this.fibaseService
+                    .actualizarRegistro('Ventas', item.id_venta, item)
+                    .then((res) => {
+                      this.clientesForm.reset();
+                      this.modalService.dismissAll();
+                      console.log('Actualizado');
+                      return;
+                    })
+                    .catch((e) => console.log('Error', e));
+                }
+              });
+
+              // console.log('v->', v);
+            });
+          // console.log('Ventas->', this.ventas);
         })
         .catch((error) => {
           console.error(error);
@@ -192,7 +219,7 @@ export class ClientesComponent implements OnInit {
       correo: item.correo,
     });
     this.idFirebaseUpdate = item.id_cliente;
-    console.log(this.idFirebaseUpdate);
+    // console.log(this.idFirebaseUpdate);
     //**//
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
